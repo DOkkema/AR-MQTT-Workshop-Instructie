@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>WebAR & IoT Workshop - Volledig Eindbestand</title>
+
+  <!-- ================================================================= -->
+  <!-- BIBLIOTHEKEN (NIET AANPASSEN)                                     -->
+  <!-- Dit zijn voorgeschreven programma-onderdelen:                     -->
+  <!--   1. A-Frame  = maakt 3D objecten in de browser                   -->
+  <!--   2. AR.js    = plakt die 3D objecten op de marker via de camera   -->
+  <!--   3. Paho MQTT= laat de pagina praten met de MQTT-broker           -->
+  <!-- ================================================================= -->
+  <script src="https://aframe.io/releases/1.0.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/jeromeetienne/AR.js/2.1.4/aframe/build/aframe-ar.js"></script>
+  <script src="js/mqttws31.min.js"></script>
+
+  <!-- ================================================================= -->
+  <!-- STYLING: hoe de 2D onderdelen op het scherm eruitzien              -->
+  <!-- (Dit is geen AR - dit zijn gewone schermelementen)                -->
+  <!-- ================================================================= -->
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* [STAP 3] Statusbalk: MQTT verbindingsstatus (bovenin midden) */
+    #status-bar {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #00ffcc;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      z-index: 1000;
+    }
+
+    /* [STAP 3] Sensordata-paneel: toont de actuele waarde uit het topic.
+       De titel van dit paneel is de naam van het topic. */
+    #sensor-panel {
+      position: fixed;
+      top: 50px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 1000;
+      border-left: 4px solid #00ffcc;
+      max-width: 60vw;
+    }
+    #sensor-panel .topic-naam {
+      font-weight: bold;
+      color: #00ffcc;
+      font-size: 12px;
+      word-break: break-all;
+    }
+    #sensor-panel .sensor-waarde {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* [STAP 2/6] Knoppenbalk onderaan het scherm */
+    #controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 1000;
+    }
+
+    .btn {
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    /* [STAP 2/6] De twee kleur-knoppen */
+    #btn-groen { background: #00aa00; }
+    #btn-rood  { background: #cc0000; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================================================================= -->
+  <!-- 2D OVERLAY OP HET SCHERM (geen AR)                                -->
+  <!-- ================================================================= -->
+
+  <!-- [STAP 3] Statusbalk: verbindingsstatus van MQTT -->
+  <div id="status-bar">MQTT: Verbinden...</div>
+
+  <!-- [STAP 3] Sensordata-paneel: actuele waarde uit het topic -->
+  <div id="sensor-panel">
+    <span class="topic-naam" id="topic-naam">-</span><br>
+    Waarde: <span class="sensor-waarde" id="sensor-waarde">-</span>
+  </div>
+
+  <!-- [STAP 2/6] Knoppenbalk: twee kleurknoppen -->
+  <div id="controls">
+    <button id="btn-groen" class="btn">GROEN</button>
+    <button id="btn-rood"  class="btn">ROOD</button>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- AR SCENE: hieronder staan de markers en 3D objecten               -->
+  <!-- ================================================================= -->
+  <a-scene embedded arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3; debugUIEnabled: false;">
+
+    <!-- ================================================================ -->
+    <!-- [STAP 1] MARKER 1: PROJECTIE                                     -->
+    <!-- ================================================================ -->
+    <a-marker type="barcode" value="1" emitevents="true">
+      <a-box position="-0.4 0.4 0" color="#ff6600" depth="0.5" height="0.5" width="0.5"></a-box>
+      <a-sphere position="0.4 0.4 0" radius="0.3" color="#00ffff"></a-sphere>
+    </a-marker>
+
+    <!-- ================================================================ -->
+    <!-- [STAP 2] MARKER 2: INTERACTIE (knoppen veranderen de kleur)      -->
+    <!-- ================================================================ -->
+    <a-marker type="barcode" value="2" emitevents="true">
+      <a-box id="stap2-kubus" position="0 0.5 0" color="#808080" depth="0.6" height="0.6" width="0.6"></a-box>
+    </a-marker>
+
+    <!-- ================================================================ -->
+    <!-- [STAP 4 + 5] MARKER 4: PROJECTIE VAN MQTT-WAARDES + DYNAMISCHE KLEUR -->
+    <!-- ================================================================ -->
+    <a-marker type="barcode" value="4" emitevents="true">
+      <a-box id="stap4-blok" position="0 0.5 0" color="#00ff00" depth="1" height="1" width="1"></a-box>
+      <a-text id="stap4-tekst" value="-" position="0 0.51 0" align="center" color="#000000" scale="0.8 0.8 0.8" side="double"></a-text>
+    </a-marker>
+
+    <!-- De AR-camera. Niet aanpassen. -->
+    <a-entity camera></a-entity>
+
+  </a-scene>
+
+  <!-- ================================================================= -->
+  <!-- SCRIPT: hier staat wat de knoppen en MQTT doen                     -->
+  <!-- ================================================================= -->
+  <script>
+    // ============================================================
+    // [OPDRACHT 4] het blok en de tekst op marker 4 ophalen
+    // ============================================================
+    const stap4Blok  = document.getElementById("stap4-blok");
+    const stap4Tekst = document.getElementById("stap4-tekst");
+
+    // ============================================================
+    // [OPDRACHT 3] MQTT INSTELLINGEN — pas hier je eigen waarden aan!
+    // ============================================================
+    const DEFAULT_MQTT_URL  = "wss://broker.emqx.io:8084/mqtt"; // of school NUC broker
+    const DEFAULT_GROEPS_ID = "AR1";                            // jouw groepsnaam
+
+    const GROEPS_ID    = DEFAULT_GROEPS_ID;
+    const MQTT_URL     = localStorage.getItem("mqtt_url")          || DEFAULT_MQTT_URL;
+    const TOPIC_SENSOR = localStorage.getItem("mqtt_topic_sensor") || ("workshop/" + GROEPS_ID + "/sensorData");
+    const TOPIC_LED    = localStorage.getItem("mqtt_topic_led")    || ("workshop/" + GROEPS_ID + "/led");
+
+    // De onderdelen van het scherm die we nodig hebben
+    const statusBar    = document.getElementById("status-bar");
+    const topicNaam    = document.getElementById("topic-naam");
+    const sensorWaarde = document.getElementById("sensor-waarde");
+
+    // Toon meteen de naam van het topic in de titel van het paneel
+    topicNaam.innerText = TOPIC_SENSOR;
+
+    // Maak de MQTT-verbinding
+    const clientId = "WebClient_" + GROEPS_ID + "_" + Math.random().toString(16).substr(2, 8);
+    const client = new Paho.MQTT.Client(MQTT_URL, clientId);
+
+    // Welke functies draaien bij welke gebeurtenis?
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+
+    // Start de verbinding
+    client.connect({
+      onSuccess: onConnect,
+      onFailure: onConnectFailure
+    });
+
+    // --- Wat gebeurt er als de verbinding LUKT? ---
+    function onConnect() {
+      statusBar.innerText = "MQTT: Verbonden (" + GROEPS_ID + ")";
+      statusBar.style.color = "#00ffcc";
+      client.subscribe(TOPIC_SENSOR);
+      console.log("Geabonneerd op topic: " + TOPIC_SENSOR);
+    }
+
+    // --- Wat gebeurt er als de verbinding MISLUKT? ---
+    function onConnectFailure(responseObject) {
+      console.error("MQTT fout: " + responseObject.errorMessage);
+      statusBar.innerText = "MQTT: Verbinding mislukt";
+      statusBar.style.color = "#ff3333";
+    }
+
+    // --- Wat gebeurt er als de verbinding WEGVALT? ---
+    function onConnectionLost(responseObject) {
+      if (responseObject.errorCode !== 0) {
+        statusBar.innerText = "MQTT: Verbinding verloren";
+        statusBar.style.color = "#ff9900";
+        setTimeout(function() {
+          statusBar.innerText = "MQTT: Opnieuw verbinden...";
+          client.connect({ onSuccess: onConnect, onFailure: onConnectFailure });
+        }, 3000);
+      }
+    }
+
+    // --- Wat gebeurt er bij elk NIEUW BERICHT op het topic? ---
+    function onMessageArrived(message) {
+      const payload = message.payloadString;
+
+      // [OPDRACHT 4] zet de ontvangen waarde ook in de 3D-tekst op marker 4
+      stap4Tekst.setAttribute("value", payload);
+
+      // Toon in het 2D paneel
+      sensorWaarde.innerText = payload;
+      console.log("Nieuwe data op [" + message.destinationName + "]: " + payload);
+
+      // [OPDRACHT 5] pas de kleur van het blok aan
+      pasKleurAan(payload);
+    }
+
+    // ============================================================
+    // [OPDRACHT 5] De kleur van het blok volgt de waarde
+    // ============================================================
+    const GRENS_GROEN = 22;   // onder deze waarde: groen
+    const GRENS_ROOD  = 27;   // boven deze waarde: rood — ertussen: geel
+
+    function pasKleurAan(waardeAlsTekst) {
+      const waarde = parseFloat(waardeAlsTekst);
+      if (isNaN(waarde)) {
+        return;
+      }
+      if (waarde < GRENS_GROEN) {
+        stap4Blok.setAttribute("color", "#00ff00");   // groen
+      } else if (waarde > GRENS_ROOD) {
+        stap4Blok.setAttribute("color", "#ff0000");   // rood
+      } else {
+        stap4Blok.setAttribute("color", "#ffff00");   // geel
+      }
+    }
+
+    // ============================================================
+    // [OPDRACHT 6] Een bericht sturen naar de Raspberry Pi
+    // ============================================================
+    function stuurNaarPi(kleurAlsRGB) {
+      if (!client.isConnected()) {
+        alert("Geen MQTT-verbinding! Verbind eerst met de broker.");
+        return;
+      }
+      const bericht = new Paho.MQTT.Message(kleurAlsRGB);
+      bericht.destinationName = TOPIC_LED;
+      client.send(bericht);
+      console.log("Verzonden naar " + TOPIC_LED + ": " + kleurAlsRGB);
+    }
+
+    // ============================================================
+    // [OPDRACHT 2] Knoppen koppelen aan object én Pi (opdracht 6)
+    // ============================================================
+    const stap2Kubus = document.getElementById("stap2-kubus");
+    const btnGroen   = document.getElementById("btn-groen");
+    const btnRood    = document.getElementById("btn-rood");
+
+    btnGroen.addEventListener("click", function() {
+      stap2Kubus.setAttribute("color", "#00ff00");
+      stuurNaarPi("0,255,0");   // [OPDRACHT 6]
+    });
+
+    btnRood.addEventListener("click", function() {
+      stap2Kubus.setAttribute("color", "#ff0000");
+      stuurNaarPi("255,0,0");   // [OPDRACHT 6]
+    });
+  </script>
+</body>
+</html>

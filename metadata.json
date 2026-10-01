@@ -1,0 +1,6 @@
+{
+  "name": "WebAR & IoT Workshop: Bouw je AR-app met MQTT",
+  "description": "Interactieve stap-voor-stap leeromgeving voor studenten: bouw een Augmented Reality app met A-Frame, AR.js, MQTT en Raspberry Pi Sense HAT.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

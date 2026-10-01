@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>WebAR & IoT Workshop</title>
+
+  <!-- ================================================================= -->
+  <!-- BIBLIOTHEKEN (NIET AANPASSEN)                                     -->
+  <!-- Dit zijn voorgeschreven programma-onderdelen:                     -->
+  <!--   1. A-Frame  = maakt 3D objecten in de browser                   -->
+  <!--   2. AR.js    = plakt die 3D objecten op de marker via de camera  -->
+  <!--   3. Paho MQTT= laat de pagina praten met de MQTT-broker          -->
+  <!--      (wordt pas gebruikt vanaf STAP 3)                             -->
+  <!-- ================================================================= -->
+  <script src="https://aframe.io/releases/1.0.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/jeromeetienne/AR.js/2.1.4/aframe/build/aframe-ar.js"></script>
+  <script src="js/mqttws31.min.js"></script>
+
+  <!-- ================================================================= -->
+  <!-- STYLING: hoe 2D onderdelen op het scherm eruitzien.                -->
+  <!-- In dit beginbestand is het scherm nog leeg (geen randen/marges).  -->
+  <!-- Vanaf STAP 2 voeg je hier knoppen en panelen toe.                  -->
+  <!-- ================================================================= -->
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================================================================= -->
+  <!-- AR SCENE: hieronder staan de markers en de 3D objecten.            -->
+  <!-- ================================================================= -->
+  <!--
+    UITLEG OVER DEZE REGEL:
+    - embedded arjs  : we gebruiken de camera van de telefoon
+    - detectionMode  : mono_and_matrix = we herkennen barcode-markers
+    - matrixCodeType : de prints zijn 3x3 barcodes (zie het printsheet)
+    - debugUIEnabled : false = geen debug-balk onderin het scherm.
+                       Zet op 'true' als de marker niet herkend wordt.
+  -->
+  <a-scene embedded arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3; debugUIEnabled: false;">
+
+    <!-- ================================================================ -->
+    <!-- [STAP 1] MARKER 1: PROJECTIE                                     -->
+    <!-- ================================================================ -->
+    <!--
+      Wat je hier ziet:
+      - <a-marker ... value="1"> = dit blok hoort bij barcode-marker 1
+      - <a-box>     = een 3D kubus
+      - <a-sphere>  = een 3D bol
+      - position="X Y Z":
+          X = links (-) / rechts (+)
+          Y = hoogte: 0 = op de marker, 0.5 = een halve meter erboven
+          Z = naar je toe (+) / van je af (-)
+      - color = de kleur als hexcode (#RRGGBB).
+        STUDENTEN: kies zelf een kleur, bijv. via
+        https://www.w3schools.com/colors/colors_hexadecimal.asp
+    -->
+    <a-marker type="barcode" value="1" emitevents="true">
+      <!-- Kubus: links van het midden, zwevend boven de marker -->
+      <a-box position="-0.4 0.4 0" color="#ff6600" depth="0.5" height="0.5" width="0.5"></a-box>
+    </a-marker>
+
+    <!-- De AR-camera. Niet aanpassen. -->
+    <a-entity camera></a-entity>
+
+  </a-scene>
+
+  <!-- ================================================================= -->
+  <!-- SCRIPT: hier komt later de logica van de knoppen (STAP 2) en       -->
+  <!-- de MQTT-verbinding (STAP 3 t/m 6). In dit beginbestand is er       -->
+  <!-- nog geen script nodig: de kubus hierboven staat volledig in de     -->
+  <!-- HTML.                                                             -->
+  <!-- ================================================================= -->
+
+</body>
+</html>
