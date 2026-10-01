@@ -19,9 +19,12 @@ export const CodeInspectorModal: React.FC<CodeInspectorModalProps> = ({
   if (!isOpen) return null;
 
   const getDownloadUrl = () => {
-    if (selectedTab === 'AR1.html') return '/AR1.html';
-    if (selectedTab === 'webar01.html') return '/webar01.html';
-    return '/js/mqttws31.min.js';
+    const base = import.meta.env.BASE_URL.endsWith('/')
+      ? import.meta.env.BASE_URL
+      : `${import.meta.env.BASE_URL}/`;
+    if (selectedTab === 'AR1.html') return `${base}AR1.html`;
+    if (selectedTab === 'webar01.html') return `${base}webar01.html`;
+    return `${base}js/mqttws31.min.js`;
   };
 
   const isCurrentTabLocked = selectedTab === 'webar01.html' && !isMastercodeUnlocked;

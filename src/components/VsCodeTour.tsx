@@ -98,7 +98,7 @@ export const VsCodeTour: React.FC = () => {
                 <button
                   onClick={() =>
                     setLightboxImg({
-                      src: '/images/VSCode1.png',
+                      src: './images/VSCode1.png',
                       alt: 'Overzichtsschema 4 fases',
                       title: 'De 4 fases van de workshop',
                       caption: '1. Ontwikkelen in VS Code, 2. Testen via Live Server, 3. Publiceren via GitHub, 4. Gebruiken met MQTT & Barcodes',
@@ -113,7 +113,7 @@ export const VsCodeTour: React.FC = () => {
               <div
                 onClick={() =>
                   setLightboxImg({
-                    src: '/images/VSCode1.png',
+                    src: './images/VSCode1.png',
                     alt: 'Overzichtsschema 4 fases',
                     title: 'De 4 fases van de workshop',
                     caption: '1. Ontwikkelen in VS Code, 2. Testen via Live Server, 3. Publiceren via GitHub, 4. Gebruiken met MQTT & Barcodes',
@@ -122,7 +122,7 @@ export const VsCodeTour: React.FC = () => {
                 className="cursor-pointer group rounded-xl overflow-hidden border border-slate-200 bg-white"
               >
                 <img
-                  src="/images/VSCode1.png"
+                  src="./images/VSCode1.png"
                   alt="Overzichtsschema van de workshop"
                   className="w-full max-h-72 object-contain mx-auto group-hover:scale-[1.01] transition-transform"
                 />
@@ -286,7 +286,7 @@ export const VsCodeTour: React.FC = () => {
                 <button
                   onClick={() =>
                     setLightboxImg({
-                      src: '/images/VSCode2.png',
+                      src: './images/VSCode2.png',
                       alt: 'Live Server installeren in VS Code',
                       title: 'Live Server van Ritwick Dey installeren',
                       caption: 'Zoek "live server" in het Extensions paneel (Ctrl+Shift+X) en klik op Install.',
@@ -301,7 +301,7 @@ export const VsCodeTour: React.FC = () => {
               <div
                 onClick={() =>
                   setLightboxImg({
-                    src: '/images/VSCode2.png',
+                    src: './images/VSCode2.png',
                     alt: 'Live Server installeren in VS Code',
                     title: 'Live Server van Ritwick Dey installeren',
                     caption: 'Zoek "live server" in het Extensions paneel (Ctrl+Shift+X) en klik op Install.',
@@ -310,7 +310,7 @@ export const VsCodeTour: React.FC = () => {
                 className="cursor-pointer group rounded-xl overflow-hidden border border-slate-200 bg-white"
               >
                 <img
-                  src="/images/VSCode2.png"
+                  src="./images/VSCode2.png"
                   alt="Live Server installeren in VS Code"
                   className="w-full max-h-72 object-contain mx-auto group-hover:scale-[1.01] transition-transform"
                 />
@@ -363,7 +363,7 @@ export const VsCodeTour: React.FC = () => {
                 <button
                   onClick={() =>
                     setLightboxImg({
-                      src: '/images/VSCode3.png',
+                      src: './images/VSCode3.png',
                       alt: 'Rechtsklikken op AR1.html en Open with Live Server kiezen',
                       title: 'Live Server starten vanuit VS Code',
                       caption: 'Rechtsklik op AR1.html in de Explorer links en klik op "Open with Live Server".',
@@ -378,7 +378,7 @@ export const VsCodeTour: React.FC = () => {
               <div
                 onClick={() =>
                   setLightboxImg({
-                    src: '/images/VSCode3.png',
+                    src: './images/VSCode3.png',
                     alt: 'Rechtsklikken op AR1.html en Open with Live Server kiezen',
                     title: 'Live Server starten vanuit VS Code',
                     caption: 'Rechtsklik op AR1.html in de Explorer links en klik op "Open with Live Server".',
@@ -387,7 +387,7 @@ export const VsCodeTour: React.FC = () => {
                 className="cursor-pointer group rounded-xl overflow-hidden border border-slate-200 bg-white"
               >
                 <img
-                  src="/images/VSCode3.png"
+                  src="./images/VSCode3.png"
                   alt="Rechtsklikken op AR1.html en Open with Live Server kiezen"
                   className="w-full max-h-72 object-contain mx-auto group-hover:scale-[1.01] transition-transform"
                 />

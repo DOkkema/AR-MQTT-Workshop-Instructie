@@ -18,7 +18,7 @@ export const WORKSHOP_STEPS: WorkshopStep[] = [
         description:
           'Tijdens deze workshop doorloop je vier heldere fases om van nul tot een complete Augmented Reality IoT-oplossing te komen (zie ook het overzichtsschema hieronder):',
         image: {
-          src: '/images/VSCode1.png',
+          src: './images/VSCode1.png',
           alt: 'Overzichtsschema van de 4 fases van de workshop',
           caption: 'De 4 pijlers: 1. Ontwikkelen in VS Code, 2. Testen via Live Server, 3. Publiceren op GitHub, 4. Gebruiken met MQTT Broker en barcodes.',
           badge: 'Workshop Overzicht',
@@ -90,7 +90,7 @@ export const WORKSHOP_STEPS: WorkshopStep[] = [
         description:
           'Live Server zorgt ervoor dat je browser automatisch ververst zodra je op Ctrl+S (opslaan) drukt. Dit hoef je maar één keer te installeren:\n\n1. Klik aan de linkerkant op het icoon met de vier blokjes (Extensions, of druk op Ctrl+Shift+X).\n2. Typ in de zoekbalk: live server.\n3. Klik bij het resultaat van Ritwick Dey op de blauwe knop Install (zie de rode cirkels op het screenshot hieronder).',
         image: {
-          src: '/images/VSCode2.png',
+          src: './images/VSCode2.png',
           alt: 'Live Server installeren via de Extensions marktplaats in VS Code',
           caption: 'Zoek naar "live server" in het Extensions paneel links en installeer de extensie van Ritwick Dey.',
           badge: 'VS Code Extensies',
@@ -101,7 +101,7 @@ export const WORKSHOP_STEPS: WorkshopStep[] = [
         description:
           'Zodra Live Server is geïnstalleerd, start je hem bij elke werksessie zo op:\n\n1. Open je workshopmap via File → Open Folder... (zorg dat zowel AR1.html als de map js/ erin staan).\n2. Rechtsklik in het bestandenlijstje links op AR1.html.\n3. Klik in het contextmenu op "Open with Live Server" (Alt+L Alt+O), zoals rood omcirkeld in de afbeelding.\n4. Er opent nu direct een browsertabblad met jouw live pagina!',
         image: {
-          src: '/images/VSCode3.png',
+          src: './images/VSCode3.png',
           alt: 'Rechtsklikken op AR1.html en Open with Live Server kiezen',
           caption: 'Rechtsklik op AR1.html → Open with Live Server. Onderin de statusbalk zie je nu Port: 5500 verschijnen.',
           badge: 'Live Server Starten',
@@ -190,7 +190,7 @@ export const WORKSHOP_STEPS: WorkshopStep[] = [
         description:
           'Ga naar je gemaakte repository "webar-workshop". Klik rechtsboven in de balk op het tabblad Settings (zoals in de rode cirkel op het screenshot):',
         image: {
-          src: '/images/Github1.png',
+          src: './images/Github1.png',
           alt: 'Klik op het Settings tabblad in je GitHub repository',
           caption: 'Klik rechtsboven op het tandwieltje "Settings" om de instellingen van je project te openen.',
           badge: 'GitHub Instellingen',
@@ -201,7 +201,7 @@ export const WORKSHOP_STEPS: WorkshopStep[] = [
         description:
           'Volg de instellingen precies zoals rood omcirkeld in de onderstaande afbeelding:\n1. Klik in het linkermenu op "Pages".\n2. Bij Build and deployment kies je Source: "Deploy from a branch".\n3. Bij Branch selecteer je "main" en map "/ (root)".\n4. Klik op de knop "Save".\n5. Wacht 1 à 2 minuten: bovenin verschijnt jouw live URL!',
         image: {
-          src: '/images/Github2.png',
+          src: './images/Github2.png',
           alt: 'GitHub Pages activeren met branch main en root map',
           caption: 'Kies Source: Deploy from a branch, Branch: main, Folder: / (root) en klik op Save.',
           badge: 'GitHub Pages Publicatie',
